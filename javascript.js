@@ -83,66 +83,6 @@ function saveAllData() {
     alert('Alla värden har sparats!');
 }
 
-// Funktion för att exportera data till JSON-fil (som skapas vid nästa laddning)
-function exportData() {
-    const savedData = loadDataFromStorage();
-    
-    // Skapa blob med JSON-data
-    const dataStr = JSON.stringify(savedData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-
-    // Skapa en temporär länk för nedladdning
-    const exportFileDefaultName = 'data.json';
-
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-    
-    alert('Data har exporterats till data.json');
-}
-
-// Funktion för att importera data från JSON-fil
-function importData() {
-    // Använd en input element för att välja filen
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
-    
-    fileInput.onchange = function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        
-        reader.onload = function(event) {
-            try {
-                const importedData = JSON.parse(event.target.result);
-                
-                // Spara den importerade datan
-                saveDataToStorage(importedData);
-                
-                // Uppdatera dropdowns efter import
-                updateDropdowns();
-                
-                alert('Data har importerats!');
-            } catch (error) {
-                console.error('Fel vid import:', error);
-                alert('Fel vid import: Felaktig JSON-fil');
-            }
-        };
-        
-        reader.onerror = function() {
-            alert('Fel vid läsning av fil');
-        };
-        
-        reader.readAsText(file);
-    };
-    
-    // Klicka på input-elementet för att öppna filväljaren
-    fileInput.click();
-}
-
 // Funktion för att uppdatera dropdowns med sparade värden
 function updateDropdowns() {
     const savedData = loadDataFromStorage();
@@ -207,10 +147,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Spara data-knapp
-    document.getElementById('exportDataBtn').addEventListener('click', exportData);
-    
-    // Importera data-knapp
-    document.getElementById('importDataBtn').addEventListener('click', importData);
+    document.getElementById('saveDataBtn').addEventListener('click', saveAllData);
     
     // Lägg till OS-knapp
     document.getElementById('addOsBtn').addEventListener('click', addNewOS);
@@ -350,4 +287,3 @@ document.addEventListener('DOMContentLoaded', function() {
     // Uppdatera dropdowns vid laddning
     updateDropdowns();
 });
-
