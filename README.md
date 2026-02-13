@@ -21,3 +21,7 @@ Notes Editor:
 Select.json generator:
 
 ![Select Editor](notes/.github/select-generator.png)
+
+One of the original Icons with the "workflow" embeded:
+
+![Huge Icon](notes/.github/example-picture-with-workflow-embeded.png)
