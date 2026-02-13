@@ -1,0 +1,27 @@
+{
+  "proxmox-notes": {
+    "resources": {
+      "image fqdn": "../icons/100x100",
+      "image width": 100,
+      "image height": 100
+    },
+    "select01": {
+      "Linux": {
+        "fa-objects": "fa-linux",
+        "text": " Linux"
+      },
+      "Windows": {
+        "fa-objects": "fa-windows",
+        "text": " Windows"
+      }
+    },
+    "select02": {
+      "Default": "default",
+      "Mint": "linuxmint02"
+    },
+    "select03": {
+      "Ubuntu 22.04": "Ubuntu 22.04",
+      "Debian 12": "Debian 12"
+    }
+  }
+}
