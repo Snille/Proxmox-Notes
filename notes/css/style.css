@@ -1,0 +1,293 @@
+:root {
+    --bg-color: #1e1e1e;
+    --card-bg: #2d2d2d;
+    --text-color: #e0e0e0;
+    --border-color: #444;
+    --accent-color: #20f020;
+
+    /* NEW: resource size variables (default fallback) */
+    --res-width: 100px;
+    --res-height: 100px;
+}
+
+body.light-theme {
+    --bg-color: #f5f5f5;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+    --border-color: #ccc;
+    --accent-color: #50fb50;
+}
+
+/* ===== Layout ===== */
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Arial, sans-serif;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    width: 100%;
+    max-width: 1100px;
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* Font Awesome dropdown */
+.fa-select {
+    font-family: 'FontAwesome', 'Segoe UI', Arial, sans-serif;
+}
+
+/* ===== Header ===== */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.top-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* ===== Media section ===== */
+.media-flex-container { display: flex; gap: 10px; margin-bottom: 20px; }
+.media-left-col { display: flex; flex-direction: column; gap: 10px; width: 120px; }
+.media-right-col { flex: 1; }
+
+/* ✅ Dynamic thumbnail size but capped at 120px */
+.image-preview-box {
+    width: min(var(--res-width), 120px);
+    height: min(var(--res-height), 120px);
+
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+
+    overflow: hidden;
+}
+
+/* Thumbnail image always fits inside box */
+#iconPreview {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* ===== Inputs ===== */
+.multiline01 { width: 98%; height: 150px; border-radius: 6px; resize: vertical; }
+.multiline02 { width: 98%; height: 120px; border-radius: 6px; margin-bottom: 20px; }
+
+.row { display: flex; gap: 10px; margin-bottom: 15px; }
+
+input, select, textarea {
+    background: var(--bg-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+/* ===== Tables grid ===== */
+.tables-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dynamic-table {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
+/* ===== Dynamic rows ===== */
+.row-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: center; }
+.row-key { width: 30%; font-weight: bold; }
+.row-val { flex: 1; }
+.service-name { width: 35%; }
+.service-url { flex: 1; }
+
+/* ===== Buttons ===== */
+button {
+    cursor: pointer;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.btn-primary { background: var(--accent-color); color: #000; }
+.remove-btn { background: #d9534f; color: white; padding: 5px 10px; }
+
+/* ===== Output ===== */
+#outputCode {
+    width: 100%;
+    height: 300px;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: monospace;
+    padding: 10px;
+    margin-top: 10px;
+    box-sizing: border-box;
+}
+
+/* ===== Preview Layer ===== */
+.preview-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.55);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 30px 16px;
+    box-sizing: border-box;
+}
+
+.preview-panel {
+    width: 100%;
+    max-width: 900px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    box-shadow: 0 18px 50px rgba(0,0,0,0.6);
+    overflow: hidden;
+}
+
+.preview-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.preview-body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    padding: 16px;
+    overflow-y: auto;
+    max-height: 70vh;
+    line-height: 1.6;
+}
+
+.preview-body table {
+    border-collapse: collapse;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.preview-body td {
+    padding: 8px;
+    border-bottom: 1px solid #333;
+    vertical-align: top;
+}
+
+/* Preview images use exact resource size */
+.preview-body img {
+    max-width: none;
+    max-height: none;
+}
+
+.msg-box {
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  line-height: 1.4;
+}
+.msg-box .ok { color: var(--accent-color); }
+.msg-box .err { color: #ff6b6b; }
+.msg-box .info { color: #ffd166; }
+.mini { opacity: 0.85; font-size: 0.92em; }
+
+.row-item.has-error {
+  outline: 2px solid #ff6b6b;
+  outline-offset: 2px;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.tight { gap: 8px; }
+
+/* drag handle */
+.drag-handle {
+  cursor: grab;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  min-width: 34px;
+  height: 38px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  opacity: 0.9;
+  user-select: none;
+}
+.dragging { opacity: 0.55; }
+
+/* Small icon preview chip */
+.fa-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  min-width: 44px;
+  height: 38px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Icon select that shows glyph + text */
+.fa-picker {
+  width: 22%;
+  min-width: 220px;
+  font-family: 'FontAwesome', 'Segoe UI', Arial, sans-serif;
+}
+
+.img-preview {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  min-width: 60px;
+  height: 44px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-color);
+  border-radius: 6px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.img-preview img { width: 100%; height: 100%; object-fit: contain; display:block; }

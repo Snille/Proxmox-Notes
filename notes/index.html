@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proxmox Notes Generator</title>
+    <link rel="icon" type="image/png" href="../icons/favicon.png">
+    <link rel="stylesheet" href="css/font-awesome.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="dark-theme">
+    <div class="container">
+        <header>
+            <h1><i class="fa fa-server"></i> Snilles Proxmox Notes Generator</h1>
+            <div class="top-actions">
+                <button id="themeToggle"><i class="fa fa-adjust"></i> Toggle Theme</button>
+                <button id="loadFileBtn"><i class="fa fa-upload"></i> Load from File</button>
+                <input type="file" id="fileInput" style="display:none" accept=".json">
+            </div>
+        </header>
+
+        <!-- ✅ Overlay Preview Layer (z-layered on top of the form) -->
+        <div id="previewLayer" class="preview-layer" style="display:none;">
+            <div class="preview-panel" role="dialog" aria-modal="true" aria-label="Proxmox Render Preview">
+                <div class="preview-panel-header">
+                    <h2 style="margin:0;"><i class="fa fa-eye"></i> Proxmox Render Preview</h2>
+                    <button type="button" id="closePreviewLayer" class="remove-btn" style="width:auto; height:auto; padding:8px 12px;">
+                        Close
+                    </button>
+                </div>
+                <div id="renderedPreviewLayerBody" class="preview-body"></div>
+            </div>
+        </div>
+		<form action="select">
+           <i class="fa fa-hand-o-right"></i> <input type="submit" value="Click here to create/change the select.json to replace the default one with!" />
+        </form>
+<!--		<a href="select" target="_blank">Generate select-json here!</a> -->
+
+        <form id="notesForm">
+            <section class="form-group">
+                <h3><i class="fa fa-cube"></i> Icon & Header</h3>
+                <div class="row">
+                    <select id="SELECT01" class="fa-select" title="OS Icon"></select>
+                    <input type="text" id="TEXT01" placeholder="Title (e.g. Ubuntu Server)">
+                </div>
+            </section>
+
+            <section class="form-group">
+                <h3><i class="fa fa-file-image-o"></i> Image & Description</h3>
+                <div class="media-flex-container">
+                    <div class="media-left-col">
+                        <select id="SELECT02" title="Picture File Name"></select>
+                        <div class="image-preview-box">
+                            <!-- ✅ No hardcoded URL/size here anymore -->
+                            <img id="iconPreview" src="" alt="Preview" style="display:block;">
+                        </div>
+                    </div>
+                    <div class="media-right-col">
+                        <textarea id="MULTILINE01" class="multiline01" placeholder="Short description..."></textarea>
+                    </div>
+                </div>
+            </section>
+
+            <section class="form-group">
+                <h3><i class="fa fa-sticky-note-o"></i> Notes</h3>
+                <textarea id="MULTILINE02" class="multiline02" placeholder="Detailed notes..."></textarea>
+            </section>
+
+            <div class="tables-grid">
+                <section class="dynamic-table" data-section="creation">
+                    <h4><i class="fa fa-exclamation-circle"></i> Creation</h4>
+                    <div class="rows-container" id="creationRows"></div>
+                    <button type="button" class="add-row" onclick="addRow('creation')">+ Add Row</button>
+                </section>
+
+                <section class="dynamic-table" data-section="network">
+                    <h4><i class="fa fa-sitemap"></i> Network</h4>
+                    <div class="rows-container" id="networkRows"></div>
+                    <button type="button" class="add-row" onclick="addRow('network')">+ Add Row</button>
+                </section>
+
+                <section class="dynamic-table" data-section="services">
+                    <h4><i class="fa fa-cogs"></i> Services (Links)</h4>
+                    <div class="rows-container" id="servicesRows"></div>
+                    <button type="button" class="add-row" onclick="addServiceRow()">+ Add Link</button>
+                </section>
+
+                <section class="dynamic-table" data-section="access">
+                    <h4><i class="fa fa-key"></i> Access</h4>
+                    <div class="rows-container" id="accessRows"></div>
+                    <button type="button" class="add-row" onclick="addRow('access')">+ Add Row</button>
+                </section>
+            </div>
+
+            <div class="main-actions">
+                <button type="button" id="makeNotes" class="btn-primary">Make Notes</button>
+                <button type="button" id="previewBtn"><i class="fa fa-eye"></i> Preview</button>
+                <button type="button" id="copyBtn"><i class="fa fa-copy"></i> Copy to Clipboard</button>
+                <button type="button" id="saveBtn"><i class="fa fa-save"></i> Save to File</button>
+            </div>
+        </form>
+
+        <div class="output-container">
+            <h3>Output Code:</h3>
+            <textarea id="outputCode" placeholder="Generated Markdown will appear here..."></textarea>
+        </div>
+    </div>
+
+    <script src="script/notes-generator.js"></script>
+</body>
+</html>
