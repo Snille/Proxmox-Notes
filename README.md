@@ -10,12 +10,12 @@ You can of course make your own "icons" and place them where ever your Proxmox s
 
 Proxmox Example:
 
-![Proxmox Note Example](notes/.github/proxmox-note-400x148.png)
+![Proxmox Note Example](notes/.github/proxmox-note.png)
 
 Notes Editor:
 
-![Notes Editor](notes/.github/notes-generator-400x685.png)
+![Notes Editor](notes/.github/notes-generator.png)
 
 Select.json generator:
 
-![Select Editor](notes/.github/select-generator-400x624.png)
+![Select Editor](notes/.github/select-generator.png)
