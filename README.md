@@ -12,14 +12,10 @@ Proxmox Example:
 
 ![Proxmox Note Example](notes/.github/proxmox-note-400x148.png)
 
-
-
-
-
 Notes Editor:
 
-![](C:\Users\eripet\AppData\Roaming\marktext\images\2026-02-13-14-01-51-notes-generator-400x685.png)
+![Notes Editor](notes/.github/notes-generator-400x685.png)
 
 Select.json generator:
 
-![](C:\Users\eripet\AppData\Roaming\marktext\images\2026-02-13-14-03-26-select-generator-400x624.png)
+![Select Editor](notes/.github/select-generator-400x624.png)
