@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snilles select.json Generator</title>
+  <link rel="icon" type="image/png" href="../icons/favicon.png">
+  <link rel="stylesheet" href="css/font-awesome.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dark-theme">
+  <div class="container">
+    <header>
+      <h1><i class="fa fa-wrench"></i> Snilles select.json Generator</h1>
+      <div class="top-actions">
+        <button id="themeToggle"><i class="fa fa-adjust"></i> Toggle Theme</button>
+        <button id="loadJsonBtn"><i class="fa fa-upload"></i> Load JSON</button>
+        <input type="file" id="jsonFileInput" style="display:none" accept=".json,application/json">
+      </div>
+    </header>
+
+    <form action="index.html">
+       <i class="fa fa-hand-o-left"></i> <input type="submit" value="Back to the Notes Generator!" />
+    </form>
+    <p></p>
+    <div id="msgBox" class="msg-box">
+      <div class="ok"><i class="fa fa-check"></i> Ready.</div>
+      <div class="mini"></div>
+    </div>
+
+    <!-- Overlay preview layer -->
+    <div id="previewLayer" class="preview-layer" style="display:none;">
+      <div class="preview-panel" role="dialog" aria-modal="true" aria-label="JSON Preview">
+        <div class="preview-panel-header">
+          <h2 style="margin:0;"><i class="fa fa-eye"></i> JSON Preview</h2>
+          <button type="button" id="closePreviewLayer" class="remove-btn" style="width:auto; height:auto; padding:8px 12px;">Close</button>
+        </div>
+        <div class="preview-body">
+          <pre id="jsonPreviewPre" style="white-space:pre; margin:0;"></pre>
+        </div>
+      </div>
+    </div>
+
+    <form id="genForm">
+
+      <!-- Resources -->
+      <section class="dynamic-table">
+        <h4><i class="fa fa-picture-o"></i> Resources</h4>
+
+        <div class="row-item">
+          <div class="row-key">Image FQDN</div>
+          <input id="resFqdn" class="row-val" type="text" placeholder="ex. https://www.yourdomain.com/proxmox/icons/100x100">
+        </div>
+
+        <div class="row-item">
+          <div class="row-key">Image width</div>
+          <input id="resWidth" class="row-val" type="number" min="1" step="1" placeholder="100">
+        </div>
+
+        <div class="row-item">
+          <div class="row-key">Image height</div>
+          <input id="resHeight" class="row-val" type="number" min="1" step="1" placeholder="100">
+        </div>
+
+        <div class="mini" style="margin-top:10px;">
+          URL template: <code>{fqdn}/{key}-{width}x{height}.png</code>
+        </div>
+      </section>
+
+      <div class="tables-grid">
+        <!-- Select01 -->
+        <section class="dynamic-table">
+          <h4><i class="fa fa-font-awesome"></i> Populates icon selector on Icon & Header</h4>
+
+          <div class="mini" style="margin-bottom:10px;">
+            Click icon dropdown and type to filter on Icon name.<br/>
+			ESC clears filter.
+          </div>
+
+          <div class="main-actions" style="justify-content:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <button type="button" id="sort01Btn"><i class="fa fa-sort-alpha-asc"></i> Sort</button>
+            <button type="button" id="addSelect01Btn" class="btn-primary">+ Add icon</button>
+          </div>
+
+          <div id="select01Rows" class="rows-container"></div>
+        </section>
+
+        <!-- Select02 -->
+        <section class="dynamic-table">
+          <h4><i class="fa fa-image"></i> Populates Image selector in Image & Description</h4>
+
+          <div class="mini" style="margin-bottom:10px;">
+            Live preview uses {key} (right field) as filename.<br/>
+			<strong>Note:</strong> Picture URL becomes: {fqdn}/{key}-{width}x{height}.png
+          </div>
+
+          <div class="main-actions" style="justify-content:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <button type="button" id="sort02Btn"><i class="fa fa-sort-alpha-asc"></i> Sort</button>
+            <button type="button" id="addSelect02Btn" class="btn-primary">+ Add image</button>
+          </div>
+
+          <div id="select02Rows" class="rows-container"></div>
+        </section>
+
+        <!-- Select03 -->
+        <section class="dynamic-table">
+          <h4><i class="fa fa-list"></i> Populates the OS dropdown under Creation</h4>
+
+          <div class="main-actions" style="justify-content:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+            <button type="button" id="sort03Btn"><i class="fa fa-sort-alpha-asc"></i> Sort</button>
+            <button type="button" id="addSelect03Btn" class="btn-primary">+ Add OS option</button>
+          </div>
+
+          <div id="select03Rows" class="rows-container"></div>
+        </section>
+
+        <!-- Output -->
+        <section class="dynamic-table">
+          <h4><i class="fa fa-code"></i> Full JSON Output</h4>
+
+          <div class="main-actions" style="justify-content:flex-start; gap:10px; flex-wrap:wrap;">
+            <button type="button" id="sortAllBtn"><i class="fa fa-sort"></i> Sort all</button>
+            <button type="button" id="previewBtn"><i class="fa fa-eye"></i> Preview</button>
+            <button type="button" id="copyBtn"><i class="fa fa-copy"></i> Copy</button>
+            <button type="button" id="downloadBtn"><i class="fa fa-save"></i> Download</button>
+          </div>
+
+          <textarea id="outputJson" style="width:100%; height:320px; margin-top:12px; font-family:monospace;" placeholder="Generated JSON appears here..."></textarea>
+        </section>
+      </div>
+    </form>
+  </div>
+
+  <script src="script/select-generator.js"></script>
+</body>
+</html>

@@ -47,7 +47,50 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadFontAwesomeMap();
   injectPickerCssOnce();
 
-  setDefaults();
+  // Try to load select.json automatically if it exists
+  try {
+    const resp = await fetch('select.json', { cache: 'no-store' });
+    if (resp.ok) {
+      const text = await resp.text();
+      try {
+        const obj = JSON.parse(text);
+        const cfg = obj && obj["proxmox-notes"];
+        if (cfg) {
+          const r = cfg.resources || {};
+          document.getElementById('resFqdn').value = r["image fqdn"] || '';
+          document.getElementById('resWidth').value = r["image width"] || 100;
+          document.getElementById('resHeight').value = r["image height"] || 100;
+
+          document.getElementById('select01Rows').innerHTML = '';
+          document.getElementById('select02Rows').innerHTML = '';
+          document.getElementById('select03Rows').innerHTML = '';
+
+          const s01 = cfg.select01 || {};
+          Object.entries(s01).forEach(([label, v]) => {
+            if (v && typeof v === 'object') addSelect01Row({ label, fa: v["fa-objects"] || '' });
+            else addSelect01Row({ label, fa: '' });
+          });
+
+          const s02 = cfg.select02 || {};
+          Object.entries(s02).forEach(([label, key]) => addSelect02Row({ label, key: String(key) }));
+
+          const s03 = cfg.select03 || {};
+          Object.entries(s03).forEach(([label, value]) => addSelect03Row({ label, value: String(value) }));
+
+          refreshAllImagePreviews();
+          buildJsonToTextarea();
+        } else {
+          setDefaults();
+        }
+      } catch (err) {
+        setDefaults();
+      }
+    } else {
+      setDefaults();
+    }
+  } catch (e) {
+    setDefaults();
+  }
 
   makeContainerSortable(document.getElementById('select01Rows'));
   makeContainerSortable(document.getElementById('select02Rows'));
@@ -81,7 +124,7 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
 
   const tipHtml = `<div class="mini" style="margin-top:10px;">
     Remeber: The FQDN needs to be set a location that your Proxmox Server can access to be able to display the pictures in the "Notes".<br/>
-	The "../../icons/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
+	The "../icons/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
 	This tool generates the select.json file to be saved to the root of the "notes"-folder.
   </div>`;
 
@@ -89,7 +132,7 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
 }
 
 function setDefaults() {
-  document.getElementById('resFqdn').value = '../../icons/100x100';
+  document.getElementById('resFqdn').value = '../icons/100x100';
   document.getElementById('resWidth').value = 100;
   document.getElementById('resHeight').value = 100;
 
@@ -107,7 +150,7 @@ function setDefaults() {
 
 async function loadFontAwesomeMap() {
   try {
-    const cssText = await fetch('../css/font-awesome.css').then(r => r.text());
+    const cssText = await fetch('css/font-awesome.css').then(r => r.text());
     const re = /\.fa-([a-z0-9-]+):before\s*\{\s*content:\s*["']\\([0-9a-fA-F]+)["']\s*;\s*\}/g;
 
     let m;
