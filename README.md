@@ -10,7 +10,7 @@ You can of course make your own "icons" and place them where ever your Proxmox s
 
 Proxmox Example:
 
-![Proxmox Note Example](https://github.com/Snille/Proxmox-Notes/blob/master/notes/.github/proxmox-note-400x148.png)
+![Proxmox Note Example](notes/.github/proxmox-note-400x148.png)
 
 
 
