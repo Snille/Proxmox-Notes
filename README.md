@@ -4,7 +4,11 @@ Clone the repo, go to http://yourdomain.com/Proxmox-Note/notes/select to create 
 
 Now you can create notes at http://yourdomain.com/Proxmox-Note/notes
 
-All icons are created with "Qwen image 2512 fp8 e4m3fn" in ComfyUI. Then editied in GIMP to fix the "transparency" background.
+All icons are created with "Qwen image 2512 fp8 e4m3fn" in ComfyUI.
+
+Then edited with "Qwen image edit 2511 bf16" in ComfyUI to clean the "outside" of the frame (make the background white).
+
+Then editied in GIMP to crop, fix "transparency" where the white background is and resize the images to desierd sizes.
 
 You can of course make your own "icons" and place them where ever your Proxmox server can access. Just update the FQDN in the select.json.
 
