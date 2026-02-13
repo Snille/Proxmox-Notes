@@ -10,6 +10,42 @@
         "fa-objects": "fa-linux",
         "text": " Linux"
       },
+      "Chip": {
+        "fa-objects": "fa-microchip",
+        "text": " Chip"
+      },
+      "Clone": {
+        "fa-objects": "fa-clone",
+        "text": " Clone"
+      },
+      "Desktop": {
+        "fa-objects": "fa-desktop",
+        "text": " Desktop"
+      },
+      "HAOS": {
+        "fa-objects": "fa-home",
+        "text": " HAOS"
+      },
+      "Nix OS": {
+        "fa-objects": "fa-cube",
+        "text": " Nix OS"
+      },
+      "Server OS": {
+        "fa-objects": "fa-server",
+        "text": " Server OS"
+      },
+      "Steam OS": {
+        "fa-objects": "fa-steam-square",
+        "text": " Steam OS"
+      },
+      "Tools": {
+        "fa-objects": "fa-wrench",
+        "text": " Tools"
+      },
+      "Apple": {
+        "fa-objects": "fa-apple",
+        "text": " Apple"
+      },
       "Windows": {
         "fa-objects": "fa-windows",
         "text": " Windows"
@@ -17,11 +53,59 @@
     },
     "select02": {
       "Default": "default",
-      "Mint": "linuxmint02"
+      "Audio book shelf": "audiobookshelf",
+      "Backup": "backup",
+      "Crafty Controller": "craftycontroller",
+      "Deluge 01": "deluge01",
+      "Deluge 02": "deluge02",
+      "File Share": "fileshare",
+      "Frigate 01": "frigate01",
+      "Frigate 02": "frigate02",
+      "Grott": "grott",
+      "Helper Scripts": "helperscripts",
+      "Home Assistant": "homeassistant",
+      "House Systems": "housesystems",
+      "Humanoid": "humanoid",
+      "Lidarr": "lidarr",
+      "Linux Mint 01": "linuxmint01",
+      "Linux Mint 02": "linuxmint02",
+      "Linux Mint 03": "linuxmint03",
+      "Ollama": "ollama",
+      "Open WebUI": "openwebui",
+      "Overseerr": "overseerr",
+      "Plex": "plex",
+      "Portainer": "portainer",
+      "Proxymanager": "proxymanager",
+      "Radarr": "radarr",
+      "Sabnzbd": "sabnzbd",
+      "Shares 01": "shares01",
+      "Shares 02": "shares02",
+      "Sonarr": "sonarr",
+      "Spoolman": "spoolman",
+      "Tautulli": "tautulli",
+      "Unifi": "unifi",
+      "Wan Bridge": "wanbridge"
     },
     "select03": {
-      "Ubuntu 22.04": "Ubuntu 22.04",
-      "Debian 12": "Debian 12"
+      "Alma Linux": "Alma Linux",
+      "Apple OS": "Apple OS",
+      "Cent OS": "Cent OS",
+      "Debian 11": "Debian 11",
+      "Debian 12": "Debian 12",
+      "Debian 13": "Debian 13",
+      "Home Assistant OS": "Home Assistant OS",
+      "Linux Mint 22.1": "Linux Mint 22.1",
+      "Linux Mint 22.2": "Linux Mint 22.2",
+      "Linux Mint 22.3": "Linux Mint 22.3",
+      "Nix OS": "Nix OS",
+      "Ubuntu Server 20.04": "Ubuntu Server 20.04",
+      "Ubuntu Server 22.04": "Ubuntu Server 22.04",
+      "Ubuntu Server 24.04": "Ubuntu Server 24.04",
+      "Windows 10": "Windows 10",
+      "Windows 11": "Windows 11",
+      "Windows Server 2012 R2": "Windows Server 2012 R2",
+      "Windows Server 2019": "Windows Server 2019",
+      "Windows Server 2022": "Windows Server 2022"
     }
   }
 }
