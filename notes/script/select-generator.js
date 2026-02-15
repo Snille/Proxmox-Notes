@@ -3,6 +3,7 @@
 let FA_MAP = {};      // "fa-linux" -> ""
 let FA_CLASSES = [];  // ["fa-linux", "fa-windows", ...]
 let BUILD_LOCK = false;
+let loadedFileInfoMsg = '';
 
 document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('themeToggle').addEventListener('click', () => {
@@ -47,51 +48,67 @@ document.addEventListener('DOMContentLoaded', async () => {
   await loadFontAwesomeMap();
   injectPickerCssOnce();
 
-  // Try to load select.json automatically if it exists
-  try {
-    const resp = await fetch('select.json', { cache: 'no-store' });
-    if (resp.ok) {
-      const text = await resp.text();
+  // --- Loading the select.json if it exists ---
+  async function loadInitialData() {
+    const filesToTry = [
+      { name: 'select.json', isExample: false },
+      { name: 'select-example.json', isExample: true }
+    ];
+    
+    for (const file of filesToTry) {
       try {
-        const obj = JSON.parse(text);
-        const cfg = obj && obj["proxmox-notes"];
-        if (cfg) {
-          const r = cfg.resources || {};
-          document.getElementById('resFqdn').value = r["image fqdn"] || '';
-          document.getElementById('resWidth').value = r["image width"] || 100;
-          document.getElementById('resHeight').value = r["image height"] || 100;
+        const resp = await fetch(file.name, { cache: 'no-store' });
+        if (resp.ok) {
+          const text = await resp.text();
+          const obj = JSON.parse(text);
+          const cfg = obj && obj["proxmox-notes"];
 
-          document.getElementById('select01Rows').innerHTML = '';
-          document.getElementById('select02Rows').innerHTML = '';
-          document.getElementById('select03Rows').innerHTML = '';
-
-          const s01 = cfg.select01 || {};
-          Object.entries(s01).forEach(([label, v]) => {
-            if (v && typeof v === 'object') addSelect01Row({ label, fa: v["fa-objects"] || '' });
-            else addSelect01Row({ label, fa: '' });
-          });
-
-          const s02 = cfg.select02 || {};
-          Object.entries(s02).forEach(([label, key]) => addSelect02Row({ label, key: String(key) }));
-
-          const s03 = cfg.select03 || {};
-          Object.entries(s03).forEach(([label, value]) => addSelect03Row({ label, value: String(value) }));
-
-          refreshAllImagePreviews();
-          buildJsonToTextarea();
-        } else {
-          setDefaults();
+          if (cfg) {
+            applyJsonToUi(cfg);
+            if (file.isExample) {
+              loadedFileInfoMsg = "<strong>Notice:</strong> Example file loaded. When you are done, save the file as <code>select.json</code> in the root of your <code>/notes</code> directory.";
+            } else {
+              loadedFileInfoMsg = "<strong>Info:</strong> Your <code>select.json</code> is loaded.";
+            }
+            setMsg([], [loadedFileInfoMsg], []);
+            return;
+          }
         }
       } catch (err) {
-        setDefaults();
+        console.warn(`Could not load ${file.name}, trying next...`);
       }
-    } else {
-      setDefaults();
     }
-  } catch (e) {
     setDefaults();
   }
 
+  function applyJsonToUi(cfg) {
+    const r = cfg.resources || {};
+    document.getElementById('resFqdn').value = r["image fqdn"] || '';
+    document.getElementById('resWidth').value = r["image width"] || 100;
+    document.getElementById('resHeight').value = r["image height"] || 100;
+
+    document.getElementById('select01Rows').innerHTML = '';
+    document.getElementById('select02Rows').innerHTML = '';
+    document.getElementById('select03Rows').innerHTML = '';
+
+    const s01 = cfg.select01 || {};
+    Object.entries(s01).forEach(([label, v]) => {
+      if (v && typeof v === 'object') addSelect01Row({ label, fa: v["fa-objects"] || '' });
+      else addSelect01Row({ label, fa: '' });
+    });
+
+    const s02 = cfg.select02 || {};
+    Object.entries(s02).forEach(([label, key]) => addSelect02Row({ label, key: String(key) }));
+
+    const s03 = cfg.select03 || {};
+    Object.entries(s03).forEach(([label, value]) => addSelect03Row({ label, value: String(value) }));
+
+    refreshAllImagePreviews();
+    buildJsonToTextarea();
+  }
+
+  await loadInitialData();
+  
   makeContainerSortable(document.getElementById('select01Rows'));
   makeContainerSortable(document.getElementById('select02Rows'));
   makeContainerSortable(document.getElementById('select03Rows'));
@@ -112,7 +129,7 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
 
   const okHtml = okLines.length
     ? `<div class="ok"><i class="fa fa-check"></i> ${okLines.join('<br>')}</div>`
-    : `<div class="ok"><i class="fa fa-check"></i> Ready.</div>`;
+    : '';
 
   const infoHtml = infoLines.length
     ? `<div class="info" style="margin-top:10px;"><i class="fa fa-info-circle"></i> ${infoLines.join('<br>')}</div>`
@@ -122,16 +139,18 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
     ? `<div class="err" style="margin-top:10px;"><i class="fa fa-exclamation-triangle"></i> ${errLines.join('<br>')}</div>`
     : '';
 
+  // Always show tip information
   const tipHtml = `<div class="mini" style="margin-top:10px;">
-    Remeber: The FQDN needs to be set a location that your Proxmox Server can access to be able to display the pictures in the "Notes".<br/>
-	The "../icons/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
-	This tool generates the select.json file to be saved to the root of the "notes"-folder.
+    Remember: The FQDN needs to be set to a location that your Proxmox Server can access to display the pictures in the "Notes".<br/>
+    The "../icons/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
+    This tool generates the select.json file to be saved to the root of the "notes"-folder.
   </div>`;
 
   box.innerHTML = okHtml + infoHtml + errHtml + tipHtml;
 }
 
 function setDefaults() {
+    loadedFileInfoMsg = '';
   document.getElementById('resFqdn').value = '../icons/100x100';
   document.getElementById('resWidth').value = 100;
   document.getElementById('resHeight').value = 100;
@@ -287,14 +306,14 @@ function addSelect01Row(initial = {}) {
     <button type="button" class="remove-btn s01-remove">×</button>
   `;
 
-  // ✅ Force one row
+  // Force one row
   wrap.style.display = 'flex';
   wrap.style.alignItems = 'center';
   wrap.style.flexWrap = 'nowrap';
 
   const labelEl = wrap.querySelector('.s01-label');
 
-  // ✅ sizing so it fits nicely as one row
+  // sizing so it fits nicely as one row
   labelEl.style.flex = '0 1 140px';
   labelEl.style.minWidth = '120px';
 
@@ -541,8 +560,10 @@ function addSelect02Row(initial = {}) {
 
 function getResources() {
   const fqdn = document.getElementById('resFqdn').value.trim();
-  const w = Number(document.getElementById('resWidth').value || 0) || 100;
-  const h = Number(document.getElementById('resHeight').value || 0) || 100;
+  const wRaw = document.getElementById('resWidth').value;
+  const hRaw = document.getElementById('resHeight').value;
+  const w = wRaw === '' ? '' : Number(wRaw);
+  const h = hRaw === '' ? '' : Number(hRaw);
   return { fqdn, w, h };
 }
 function buildImageUrl(key) {
@@ -614,8 +635,12 @@ function validateAll() {
 
   const { fqdn, w, h } = getResources();
   if (!fqdn) errors.push('Resources: "image fqdn" is empty.');
-  if (!Number.isFinite(w) || w <= 0) errors.push('Resources: "image width" must be > 0.');
-  if (!Number.isFinite(h) || h <= 0) errors.push('Resources: "image height" must be > 0.');
+  if (typeof w !== 'number' || isNaN(w) || w === null || w === undefined || w === '' || w <= 0) {
+    errors.push('Resources: "image width" must be present and a positive number.');
+  }
+  if (typeof h !== 'number' || isNaN(h) || h === null || h === undefined || h === '' || h <= 0) {
+    errors.push('Resources: "image height" must be present and a positive number.');
+  }
 
   const s01LabelCounts = {};
   document.querySelectorAll('#select01Rows .row-item').forEach(row => {
@@ -705,11 +730,36 @@ function buildJsonToTextarea() {
   const obj = buildSelectJsonObject();
   document.getElementById('outputJson').value = JSON.stringify(obj, null, 2);
 
-  if (errors.length) setMsg([], infos, errors);
-  else setMsg(['No validation errors.'], infos, []);
+
+  // Always include loaded file info in info box
+  const infoCombined = loadedFileInfoMsg ? [loadedFileInfoMsg, ...infos] : infos;
+  if (errors.length) setMsg([], infoCombined, errors);
+  else setMsg(['No validation errors.'], infoCombined, []);
 
   BUILD_LOCK = false;
 }
+
+// Validate JSON in output box if user edits it manually
+document.addEventListener('DOMContentLoaded', () => {
+  const outputJson = document.getElementById('outputJson');
+  if (outputJson) {
+    outputJson.addEventListener('input', () => {
+      let error = null;
+      try {
+        JSON.parse(outputJson.value);
+      } catch (e) {
+        error = 'Output is not valid JSON: ' + e.message;
+      }
+      if (error) {
+        setMsg([], [], [error]);
+      } else {
+        buildJsonToTextarea();
+      }
+    });
+  }
+});
+
+BUILD_LOCK = false;
 
 function scheduleBuild() {
   window.clearTimeout(scheduleBuild._t);

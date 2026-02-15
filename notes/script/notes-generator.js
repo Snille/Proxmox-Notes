@@ -1,3 +1,6 @@
+// Proxmox Notes Generator
+// A simple tool to create markdown notes with a consistent format and styling for your Proxmox VMs/containers.
+// FontAwesome icons are used for visual appeal.
 // https://fontawesome.com/v4/cheatsheet/
 
 let APP_CFG = null;
@@ -5,7 +8,7 @@ let APP_CFG = null;
 document.addEventListener('DOMContentLoaded', async () => {
     APP_CFG = await loadSelectData();
 
-    // ✅ Push resources image size into CSS variables (used by min() in form thumbnail box)
+    // Push resources image size into CSS variables (used by min() in form thumbnail box)
     applyResourceSizeToCSS();
 
     setupDefaultRows(APP_CFG);
@@ -51,12 +54,8 @@ function getResources() {
     };
 }
 
-/**
- * ✅ Writes resources image width/height into CSS variables
- * so your form thumbnail box can do:
- * width:  min(var(--res-width), 120px);
- * height: min(var(--res-height), 120px);
- */
+
+// Writes resources image width/height into CSS variables
 function applyResourceSizeToCSS() {
     const res = getResources();
     document.documentElement.style.setProperty('--res-width', `${res.imageWidth}px`);
@@ -69,50 +68,72 @@ function getImageUrl(imageKey) {
 }
 
 async function loadSelectData() {
+    let usedExample = false;
+    let cfg = null;
     try {
-        const response = await fetch('select.json');
+        let response = await fetch('select.json', {cache: 'no-store'});
+        if (!response.ok) throw new Error('select.json not found');
         const data = await response.json();
-        const cfg = data['proxmox-notes'];
-
-        // SELECT01
-        const s01 = document.getElementById('SELECT01');
-        s01.innerHTML = '';
-
-        Object.entries(cfg.select01 || {}).forEach(([k, v]) => {
-            let faClass = '';
-            let displayText = '';
-
-            if (v && typeof v === 'object') {
-                faClass = v['fa-objects'] || v['fa'] || v['class'] || '';
-                displayText = v['text'] || v['label'] || k;
-            } else {
-                faClass = k;
-                displayText = String(v);
-            }
-
-            if (!faClass) faClass = k;
-
-            const opt = document.createElement('option');
-            opt.value = faClass;
-            opt.textContent = displayText;
-            s01.appendChild(opt);
-        });
-
-        // SELECT02
-        const s02 = document.getElementById('SELECT02');
-        s02.innerHTML = '';
-        Object.entries(cfg.select02 || {}).forEach(([label, val]) => {
-            const opt = document.createElement('option');
-            opt.value = val;
-            opt.textContent = label;
-            s02.appendChild(opt);
-        });
-
-        return cfg;
+        cfg = data['proxmox-notes'];
     } catch (e) {
-        console.error("Could not load select.json", e);
-        return null;
+        // Try select-example.json
+        try {
+            let response = await fetch('select-example.json', {cache: 'no-store'});
+            if (!response.ok) throw new Error('select-example.json not found');
+            const data = await response.json();
+            cfg = data['proxmox-notes'];
+            usedExample = true;
+        } catch (e2) {
+            console.error("Could not load select.json or select-example.json", e2);
+            return null;
+        }
     }
+
+    // SELECT01
+    const s01 = document.getElementById('SELECT01');
+    s01.innerHTML = '';
+    Object.entries(cfg.select01 || {}).forEach(([k, v]) => {
+        let faClass = '';
+        let displayText = '';
+
+        if (v && typeof v === 'object') {
+            faClass = v['fa-objects'] || v['fa'] || v['class'] || '';
+            displayText = v['text'] || v['label'] || k;
+        } else {
+            faClass = k;
+            displayText = String(v);
+        }
+
+        if (!faClass) faClass = k;
+
+        const opt = document.createElement('option');
+        opt.value = faClass;
+        opt.textContent = displayText;
+        s01.appendChild(opt);
+    });
+
+    // SELECT02
+    const s02 = document.getElementById('SELECT02');
+    s02.innerHTML = '';
+    Object.entries(cfg.select02 || {}).forEach(([label, val]) => {
+        const opt = document.createElement('option');
+        opt.value = val;
+        opt.textContent = label;
+        s02.appendChild(opt);
+    });
+
+    // If example was used, style the button in index.html if present
+    if (usedExample) {
+        try {
+            const exBtn = window.parent.document.getElementById('selectJsonNoticeBtn');
+            if (exBtn) {
+                exBtn.style.fontWeight = 'bold';
+                exBtn.style.color = 'red';
+            }
+        } catch (e) {}
+    }
+
+    return cfg;
 }
 
 /**
@@ -192,7 +213,7 @@ function generateNotes() {
     const key = (s02 && s02.trim()) ? s02.trim() : 'default';
     const imgUrl = getImageUrl(key);
 
-    // ✅ Preview + output image size follows resources exactly
+    // Preview + output image size follows resources exactly
     const imgStyle = `width:${res.imageWidth}px;height:${res.imageHeight}px;`;
 
     let md = `# <i class="fa ${s01}"></i> ${t01}\n| | |\n| - | - |\n`;
