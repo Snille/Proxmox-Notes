@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('copyBtn').addEventListener('click', copyOutput);
   document.getElementById('downloadBtn').addEventListener('click', downloadSelectJson);
 
-  ['resFqdn', 'resWidth', 'resHeight'].forEach(id => {
+  ['resFqdn', 'resWidth', 'resHeight', 'resDivider', 'resExt'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
       refreshAllImagePreviews();
       scheduleBuild();
@@ -86,6 +86,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('resFqdn').value = r["image fqdn"] || '';
     document.getElementById('resWidth').value = r["image width"] || 100;
     document.getElementById('resHeight').value = r["image height"] || 100;
+    document.getElementById('resDivider').value = r["divider"] || 'x';
+    document.getElementById('resExt').value = r["extension"] || '.png';
 
     document.getElementById('select01Rows').innerHTML = '';
     document.getElementById('select02Rows').innerHTML = '';
@@ -154,6 +156,8 @@ function setDefaults() {
   document.getElementById('resFqdn').value = '../icons/blue/100x100';
   document.getElementById('resWidth').value = 100;
   document.getElementById('resHeight').value = 100;
+  document.getElementById('resDivider').value = 'x';
+  document.getElementById('resExt').value = '.png';
 
   addSelect01Row({ label: 'Linux', fa: 'fa-linux' });
   addSelect01Row({ label: 'Windows', fa: 'fa-windows' });
@@ -294,10 +298,11 @@ function injectPickerCssOnce() {
 
 // ---------- select01 row ----------
 function addSelect01Row(initial = {}) {
+  const container = document.getElementById('select01Rows');
+  // No table header
   const wrap = document.createElement('div');
   wrap.className = 'row-item tight';
   wrap.dataset.type = 's01';
-
   wrap.innerHTML = `
     <span class="drag-handle" title="Drag to reorder"><i class="fa fa-bars"></i></span>
     <span class="fa-chip" title="Icon preview"><i class="fa"></i></span>
@@ -523,10 +528,11 @@ function createFaPicker(host, initialFa, onChange) {
 
 // ---------- select02 / select03 ----------
 function addSelect02Row(initial = {}) {
+  const container = document.getElementById('select02Rows');
+  // No table header
   const wrap = document.createElement('div');
   wrap.className = 'row-item tight';
   wrap.dataset.type = 's02';
-
   wrap.innerHTML = `
     <span class="drag-handle" title="Drag to reorder"><i class="fa fa-bars"></i></span>
     <span class="img-preview" title="Image preview"><img alt=""/></span>
@@ -562,14 +568,16 @@ function getResources() {
   const fqdn = document.getElementById('resFqdn').value.trim();
   const wRaw = document.getElementById('resWidth').value;
   const hRaw = document.getElementById('resHeight').value;
+  const divider = document.getElementById('resDivider')?.value || 'x';
+  const ext = document.getElementById('resExt')?.value || '.png';
   const w = wRaw === '' ? '' : Number(wRaw);
   const h = hRaw === '' ? '' : Number(hRaw);
-  return { fqdn, w, h };
+  return { fqdn, w, h, divider, ext };
 }
 function buildImageUrl(key) {
-  const { fqdn, w, h } = getResources();
+  const { fqdn, w, h, divider, ext } = getResources();
   const safeKey = (key || 'default01').trim() || 'default01';
-  return `${fqdn}/${safeKey}${w}x${h}.png`;
+  return `${fqdn}/${safeKey}${w}${divider}${h}${ext}`;
 }
 function refreshImagePreviewForRow(row) {
   const keyEl = row.querySelector('.s02-key');
@@ -584,10 +592,11 @@ function refreshAllImagePreviews() {
 }
 
 function addSelect03Row(initial = {}) {
+  const container = document.getElementById('select03Rows');
+  // No table header
   const wrap = document.createElement('div');
   wrap.className = 'row-item tight';
   wrap.dataset.type = 's03';
-
   wrap.innerHTML = `
     <span class="drag-handle" title="Drag to reorder"><i class="fa fa-bars"></i></span>
     <input class="row-key s03-label" type="text" placeholder="Label (shown)" value="${escapeHtmlAttr(initial.label || '')}">
@@ -656,9 +665,9 @@ function validateAll() {
 
   const s02LabelCounts = {};
   const s02KeyCounts = {};
-  document.querySelectorAll('#select02Rows .row-item').forEach(row => {
-    const label = row.querySelector('.s02-label').value.trim();
-    const key = row.querySelector('.s02-key').value.trim();
+  document.querySelectorAll('#select02Rows .row-item:not(.table-head)').forEach(row => {
+    const label = row.querySelector('.s02-label')?.value.trim();
+    const key = row.querySelector('.s02-key')?.value.trim();
     if (!label) markError(row, 'Image: Missing Label.');
     if (!key) markError(row, 'Image: Missing key.');
     if (label) s02LabelCounts[label] = (s02LabelCounts[label] || 0) + 1;
@@ -668,8 +677,8 @@ function validateAll() {
   Object.entries(s02KeyCounts).forEach(([k, c]) => { if (c > 1) infos.push(`Image: Duplicate key "${k}" (allowed).`); });
 
   const s03LabelCounts = {};
-  document.querySelectorAll('#select03Rows .row-item').forEach(row => {
-    const label = row.querySelector('.s03-label').value.trim();
+  document.querySelectorAll('#select03Rows .row-item:not(.table-head)').forEach(row => {
+    const label = row.querySelector('.s03-label')?.value.trim();
     if (!label) markError(row, 'OS: Missing Label.');
     if (label) s03LabelCounts[label] = (s03LabelCounts[label] || 0) + 1;
   });
@@ -682,12 +691,12 @@ function validateAll() {
 }
 
 function buildSelectJsonObject() {
-  const { fqdn, w, h } = getResources();
-  const resources = { "image fqdn": fqdn, "image width": w, "image height": h };
+  const { fqdn, w, h, divider, ext } = getResources();
+  const resources = { "image fqdn": fqdn, "image width": w, "image height": h, "divider": divider, "extension": ext };
 
   const select01 = {};
-  document.querySelectorAll('#select01Rows .row-item').forEach(row => {
-    const label = row.querySelector('.s01-label').value.trim();
+  document.querySelectorAll('#select01Rows .row-item:not(.table-head)').forEach(row => {
+    const label = row.querySelector('.s01-label')?.value.trim();
     const fa = normalizeFaClass(row.dataset.fa || '');
     if (!label) return;
     const text = autoBuildText(label, fa);
@@ -695,17 +704,17 @@ function buildSelectJsonObject() {
   });
 
   const select02 = {};
-  document.querySelectorAll('#select02Rows .row-item').forEach(row => {
-    const label = row.querySelector('.s02-label').value.trim();
-    const key = row.querySelector('.s02-key').value.trim();
+  document.querySelectorAll('#select02Rows .row-item:not(.table-head)').forEach(row => {
+    const label = row.querySelector('.s02-label')?.value.trim();
+    const key = row.querySelector('.s02-key')?.value.trim();
     if (!label || !key) return;
     select02[label] = key;
   });
 
   const select03 = {};
-  document.querySelectorAll('#select03Rows .row-item').forEach(row => {
-    const label = row.querySelector('.s03-label').value.trim();
-    const value = row.querySelector('.s03-value').value.trim();
+  document.querySelectorAll('#select03Rows .row-item:not(.table-head)').forEach(row => {
+    const label = row.querySelector('.s03-label')?.value.trim();
+    const value = row.querySelector('.s03-value')?.value.trim();
     if (!label) return;
     select03[label] = value || label;
   });
@@ -800,6 +809,8 @@ function loadFromFile(ev) {
       document.getElementById('resFqdn').value = r["image fqdn"] || '';
       document.getElementById('resWidth').value = r["image width"] || 100;
       document.getElementById('resHeight').value = r["image height"] || 100;
+      document.getElementById('resDivider').value = r["divider"] || 'x';
+      document.getElementById('resExt').value = r["extension"] || '.png';
 
       document.getElementById('select01Rows').innerHTML = '';
       document.getElementById('select02Rows').innerHTML = '';
@@ -855,7 +866,7 @@ function makeContainerSortable(container) {
 
   container.addEventListener('dragstart', (e) => {
     const row = e.target.closest('.row-item');
-    if (!row) return;
+    if (!row || row.classList.contains('table-head')) return;
 
     if (row.dataset.dragAllowed !== '1') {
       e.preventDefault();
@@ -884,7 +895,7 @@ function makeContainerSortable(container) {
 }
 
 function getDragAfterElement(container, y) {
-  const els = [...container.querySelectorAll('.row-item:not(.dragging)')];
+  const els = [...container.querySelectorAll('.row-item:not(.dragging):not(.table-head)')];
   let closest = { offset: Number.NEGATIVE_INFINITY, element: null };
 
   for (const el of els) {

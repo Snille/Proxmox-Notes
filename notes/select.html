@@ -59,12 +59,22 @@
         </div>
 
         <div class="row-item">
+          <div class="row-key">Divider (between width and height)</div>
+          <input id="resDivider" class="row-val" type="text" maxlength="2" style="width:40px;" value="x" title="Divider between width and height in filename">
+        </div>
+
+        <div class="row-item">
           <div class="row-key">Image height</div>
           <input id="resHeight" class="row-val" type="number" min="1" step="1" placeholder="100">
         </div>
 
+        <div class="row-item">
+          <div class="row-key">Extension</div>
+          <input id="resExt" class="row-val" type="text" maxlength="8" style="width:60px;" value=".png" title="File extension for images (include dot)">
+        </div>
+
         <div class="mini" style="margin-top:10px;">
-          URL template: <code>{fqdn}/{key}{width}x{height}.png</code>
+          URL template: <code>{fqdn}/{key}{width}<span id="dividerHelp">x</span>{height}<span id="extHelp">.png</span></code>
         </div>
       </section>
 
@@ -92,7 +102,7 @@
 
           <div class="mini" style="margin-bottom:10px;">
             Live preview uses {key} (right field) as filename.<br/>
-			<strong>Note:</strong> Picture URL becomes: {fqdn}/{key}-{width}x{height}.png
+      			<strong>Note:</strong> Picture URL becomes: {fqdn}/{key}{width}<span id="dividerHelp2">x</span>{height}<span id="extHelp2">.png</span>
           </div>
 
           <div class="main-actions" style="justify-content:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
@@ -133,5 +143,21 @@
   </div>
 
   <script src="script/select-generator.js"></script>
+  <script>
+    // Update divider and extension in help text dynamically
+    const dividerInput = document.getElementById('resDivider');
+    const extInput = document.getElementById('resExt');
+    function updateHelpText() {
+      const dividerVal = dividerInput.value || 'x';
+      const extVal = extInput.value || '.png';
+      document.getElementById('dividerHelp').textContent = dividerVal;
+      document.getElementById('dividerHelp2').textContent = dividerVal;
+      document.getElementById('extHelp').textContent = extVal;
+      document.getElementById('extHelp2').textContent = extVal;
+    }
+    dividerInput.addEventListener('input', updateHelpText);
+    extInput.addEventListener('input', updateHelpText);
+    updateHelpText();
+  </script>
 </body>
 </html>
