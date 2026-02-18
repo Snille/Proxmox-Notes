@@ -48,7 +48,7 @@ function hidePreviewLayer() {
 function getResources() {
     const r = (APP_CFG && APP_CFG.resources) ? APP_CFG.resources : {};
     return {
-        imageFqdn: r["image fqdn"] || "../../icons/100x100",
+        imageFqdn: r["image fqdn"] || "../../icons/blue/100x100",
         imageWidth: Number(r["image width"] || 100),
         imageHeight: Number(r["image height"] || 100),
     };
@@ -64,7 +64,7 @@ function applyResourceSizeToCSS() {
 
 function getImageUrl(imageKey) {
     const res = getResources();
-    return `${res.imageFqdn}/${imageKey}-${res.imageWidth}x${res.imageHeight}.png`;
+    return `${res.imageFqdn}/${imageKey}${res.imageWidth}x${res.imageHeight}.png`;
 }
 
 async function loadSelectData() {
@@ -149,7 +149,7 @@ function updateIconPreview() {
     // Ensure CSS vars reflect current resources (in case select.json changed)
     applyResourceSizeToCSS();
 
-    const val = (select.value && select.value.trim()) ? select.value.trim() : 'default';
+    const val = (select.value && select.value.trim()) ? select.value.trim() : 'default01';
 
     // Keep the FORM size controlled by CSS only
     preview.src = getImageUrl(val);

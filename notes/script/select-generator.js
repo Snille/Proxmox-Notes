@@ -142,7 +142,7 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
   // Always show tip information
   const tipHtml = `<div class="mini" style="margin-top:10px;">
     Remember: The FQDN needs to be set to a location that your Proxmox Server can access to display the pictures in the "Notes".<br/>
-    The "../icons/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
+    The "../icons/blue/100x100" is just for demo purposes. You need to change it to a REAL FQDN.<br/>
     This tool generates the select.json file to be saved to the root of the "notes"-folder.
   </div>`;
 
@@ -151,7 +151,7 @@ function setMsg(okLines = [], infoLines = [], errLines = []) {
 
 function setDefaults() {
     loadedFileInfoMsg = '';
-  document.getElementById('resFqdn').value = '../icons/100x100';
+  document.getElementById('resFqdn').value = '../icons/blue/100x100';
   document.getElementById('resWidth').value = 100;
   document.getElementById('resHeight').value = 100;
 
@@ -568,13 +568,13 @@ function getResources() {
 }
 function buildImageUrl(key) {
   const { fqdn, w, h } = getResources();
-  const safeKey = (key || 'default').trim() || 'default';
-  return `${fqdn}/${safeKey}-${w}x${h}.png`;
+  const safeKey = (key || 'default01').trim() || 'default01';
+  return `${fqdn}/${safeKey}${w}x${h}.png`;
 }
 function refreshImagePreviewForRow(row) {
   const keyEl = row.querySelector('.s02-key');
   const img = row.querySelector('.img-preview img');
-  const key = (keyEl.value || '').trim() || 'default';
+  const key = (keyEl.value || '').trim() || 'default01';
   const url = buildImageUrl(key);
   img.src = url;
   row.querySelector('.img-preview').title = url;
