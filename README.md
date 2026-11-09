@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **This project is archived and no longer developed.** It is replaced by [Proxmox Notes MCP](https://github.com/Snille/Proxmox-Notes-MCP): a web GUI and MCP server that reads and writes the Notes in Proxmox directly.
+
 **A vibe coded small tool for creating fancy "Notes" to Proxmox VM/LXC notes "Field".**
 
 Clone the repo, go to http://yourdomain.com/Proxmox-Note/notes/select.html to create your own select.json and save it in the root of the "notes" folder.
